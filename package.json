@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "start": "node --optimize-for-size --max-old-space-size=384 sylivanus.js"
+    "start": "node sylivanus.js"
   },
   "keywords": [],
   "author": "",
