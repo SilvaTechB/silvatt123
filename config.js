@@ -2,6 +2,7 @@ export const prefix = '!';
 export const owner = ['+254700143167'];
 export const sessionFile = './session';
 export const AUTO_STATUS_SEEN = true;
+export const SESSION_ID = '';
 export const AUTO_STATUS_REACT = true;
 export const AUTO_STATUS_REPLY = false;
 export const AUTO_STATUS_MSG = "🔥 Silva MD Pro noticed your status!";
@@ -24,3 +25,4 @@ export const globalContextInfo = {
     serverMessageId: 144
   }
 };
+
