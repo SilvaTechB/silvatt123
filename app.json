@@ -2,7 +2,9 @@
   "name": "Silva MD Pro",
   "description": "Advanced WhatsApp bot by Silva Tech Nexus",
   "repository": "https://github.com/executive-silva/silva",
-  "keywords": ["whatsapp", "bot", "baileys", "silva", "silva-md-pro"],
+ "keywords": ["silva-md", "whatsapp", "baileys", "bot"],
+  "success_url": "/",
+  "stack": "heroku-24",
   "env": {
     "SESSION_ID": {
       "description": "Your Mega.nz session key, format: Silva~XXXXXXX",
