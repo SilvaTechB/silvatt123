@@ -1,32 +1,63 @@
-/**
- * Uptime plugin for Silva MD Pro
- * Usage: !uptime
- */
+import os from "os";
+import { globalContextInfo } from "../lib/silvaConnect.js";
 
-const handler = async (m, { conn, globalContextInfo }) => {
+const formatTime = (seconds) => {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  return `${h}h ${m}m ${s}s`;
+};
+
+const handler = async (m, { conn }) => {
   try {
-    const uptime = process.uptime();
-    const hrs = Math.floor(uptime / 3600);
-    const mins = Math.floor((uptime % 3600) / 60);
-    const secs = Math.floor(uptime % 60);
+    const uptime = formatTime(process.uptime());
+    const cpu = os.cpus()[0]?.model || "Unknown CPU";
+    const platform = os.platform()?.toUpperCase() || "Unknown";
+    const totalMem = (os.totalmem() / 1024 / 1024 / 1024).toFixed(2);
+    const freeMem = (os.freemem() / 1024 / 1024 / 1024).toFixed(2);
+    const latency = m.messageTimestamp
+      ? new Date().getTime() - m.messageTimestamp * 1000
+      : 0;
 
-    const msg = `⏰ *Bot Uptime:* ${hrs}h ${mins}m ${secs}s`;
+    const caption = `
+┏━━━━━━━━━━━━━━━━━━┓
+      ⚙️ *Silva MD Pro Status*
+┗━━━━━━━━━━━━━━━━━━┛
 
-    await conn.sendMessage(m.chat, {
-      text: msg,
-      contextInfo: globalContextInfo
-    });
-  } catch (err) {
-    console.error("UPTIME PLUGIN ERROR:", err);
-    await conn.sendMessage(m.chat, {
-      text: "❌ Could not fetch uptime.",
-      contextInfo: globalContextInfo
-    });
+🕒 *Uptime:* ${uptime}
+⚡ *Latency:* ${latency} ms
+🖥 *CPU:* ${cpu}
+🏗 *Platform:* ${platform}
+🛠 *RAM:* ${freeMem} GB / ${totalMem} GB
+
+✨ _Engineered by Silva Tech Inc_
+`.trim();
+
+    await conn.sendMessage(
+      m.chat,
+      {
+        image: { url: "https://files.catbox.moe/5uli5p.jpeg" },
+        caption,
+        contextInfo: globalContextInfo,
+      },
+      { quoted: m }
+    );
+  } catch (error) {
+    console.error("❌ Uptime Plugin Error:", error);
+    await conn.sendMessage(
+      m.chat,
+      {
+        text: "⚠️ *Failed to fetch runtime details.*\nPlease check your bot logs for more info.",
+        contextInfo: globalContextInfo,
+      },
+      { quoted: m }
+    );
   }
 };
 
-handler.help = ["uptime"];
-handler.tags = ["info"];
-handler.command = ["uptime"];
+handler.help = ["uptime", "runtime"];
+handler.tags = ["system", "info"];
+handler.command = ["uptime", "runtime"];
+handler.private = false;
 
 export default handler;
